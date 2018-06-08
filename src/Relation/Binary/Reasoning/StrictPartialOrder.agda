@@ -7,10 +7,10 @@
 
 open import Relation.Binary
 
-module Relation.Binary.StrictPartialOrderReasoning
+module Relation.Binary.Reasoning.StrictPartialOrder
          {p₁ p₂ p₃} (S : StrictPartialOrder p₁ p₂ p₃) where
 
-import Relation.Binary.PreorderReasoning as PreR
+import Relation.Binary.Reasoning.Preorder as PreR
 import Relation.Binary.Properties.StrictPartialOrder as SPO
 open PreR (SPO.preorder S) public
 open import Data.Sum

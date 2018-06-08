@@ -21,13 +21,13 @@
 --       ≈⟨ y≈z ⟩
 --     z ∎
 
-open import Relation.Binary.EqReasoning as EqR using (_IsRelatedTo_)
+open import Relation.Binary.Reasoning.Equational as EqR using (_IsRelatedTo_)
 open import Relation.Binary
 open import Relation.Binary.Core
 
 open Setoid
 
-module Relation.Binary.SetoidReasoning where
+module Relation.Binary.Reasoning.Setoid where
 
 infix 1 begin⟨_⟩_
 infixr 2 _≈⟨_⟩_ _≡⟨_⟩_
