@@ -18,7 +18,7 @@ module Relation.Binary.Reasoning.Core.Strict
 
 
   -- Useful tools
-  
+
   data _≲_ (x y : A) : Set (ℓ₂ ⊔ ℓ₃) where
     strict    : x < y → x ≲ y
     nonstrict : x ≤ y → x ≲ y
@@ -32,21 +32,21 @@ module Relation.Binary.Reasoning.Core.Strict
 
   extractStrict : ∀ {x y} {x≲y : x ≲ y} → IsStrict x≲y → x < y
   extractStrict (isStrict x<y) = x<y
-  
-  
+
+
   -- Actual implementation
 
   infix -1 <-begin_ begin_
   infixr 0 _<⟨_⟩_ _≤⟨_⟩_ _≈⟨_⟩_ _≡⟨_⟩_ _≡⟨⟩_
-  infix  1 _∎ 
+  infix  1 _∎
 
   begin_ : ∀ {x y : A} (x≲y : x ≲ y) → x ≤ y
   begin strict    x<y = <⇒≤ x<y
   begin nonstrict x≤y = x≤y
-  
+
   <-begin_ : ∀ {x y : A} (x≲y : x ≲ y) {eq : True (IsStrict? x≲y)}  → x < y
   (<-begin p) {eq} = extractStrict (toWitness eq)
-  
+
   _<⟨_⟩_ : ∀ (x : A) {y z} → x < y → y ≲ z → x ≲ z
   x <⟨ x<y ⟩ strict    y<z = strict (<-trans x<y y<z)
   x <⟨ x<y ⟩ nonstrict y≤z = strict (<-≤-trans x<y y≤z)
@@ -58,7 +58,7 @@ module Relation.Binary.Reasoning.Core.Strict
   _≈⟨_⟩_ : ∀ (x : A) {y z} → x ≈ y → y ≲ z → x ≲ z
   x ≈⟨ x≈y ⟩ strict    y<z = strict    (<-respˡ-≈ (≈-sym x≈y) y<z)
   x ≈⟨ x≈y ⟩ nonstrict y≤z = nonstrict (≤-respˡ-≈ (≈-sym x≈y) y≤z)
-  
+
   _≡⟨_⟩_ : ∀ (x : A) {y z} → x ≡ y → y ≲ z → x ≲ z
   x ≡⟨ x≡y ⟩ strict    y<z = strict    (case x≡y of λ where refl → y<z)
   x ≡⟨ x≡y ⟩ nonstrict y≤z = nonstrict (case x≡y of λ where refl → y≤z)
@@ -66,13 +66,13 @@ module Relation.Binary.Reasoning.Core.Strict
 
   _≡⟨⟩_ : ∀ (x : A) {y} → x ≲ y → x ≲ y
   x ≡⟨⟩ x≲y = x≲y
-  
+
   _∎ : ∀ (x : A) → x ≲ x
   x ∎ = nonstrict ≤-refl
 
 
   -- Tests
-  
+
   postulate
     u v w x y z b c : A
     u≈v : u ≈ v
@@ -93,7 +93,7 @@ module Relation.Binary.Reasoning.Core.Strict
     z ≡⟨ z≡b ⟩
     b ≈⟨ b≈c ⟩
     c ∎
-  
+
   u<c : u < c
   u<c = <-begin
     u ≈⟨ u≈v ⟩
@@ -104,7 +104,7 @@ module Relation.Binary.Reasoning.Core.Strict
     z ≡⟨ z≡b ⟩
     b ≈⟨ b≈c ⟩
     c ∎
-    
+
 {-
 
 
@@ -116,5 +116,3 @@ module Relation.Binary.Reasoning.Core.Strict
 
 -}
 
-
-  
