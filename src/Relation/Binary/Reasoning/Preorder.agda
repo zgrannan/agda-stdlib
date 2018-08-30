@@ -26,41 +26,12 @@
 open import Relation.Binary
 
 module Relation.Binary.Reasoning.Preorder
-         {p₁ p₂ p₃} (P : Preorder p₁ p₂ p₃) where
+  {p₁ p₂ p₃} (P : Preorder p₁ p₂ p₃) where
 
-open import Relation.Binary.PropositionalEquality as P using (_≡_)
+import Relation.Binary.Reasoning.Core.Single as Base
 open Preorder P
 
-infix  4 _IsRelatedTo_
-infix  3 _∎
-infixr 2 _∼⟨_⟩_ _≈⟨_⟩_ _≈⟨⟩_
-infix  1 begin_
-
--- This seemingly unnecessary type is used to make it possible to
--- infer arguments even if the underlying equality evaluates.
-
-data _IsRelatedTo_ (x y : Carrier) : Set p₃ where
-  relTo : (x∼y : x ∼ y) → x IsRelatedTo y
-
-begin_ : ∀ {x y} → x IsRelatedTo y → x ∼ y
-begin relTo x∼y = x∼y
-
-_∼⟨_⟩_ : ∀ x {y z} → x ∼ y → y IsRelatedTo z → x IsRelatedTo z
-_ ∼⟨ x∼y ⟩ relTo y∼z = relTo (trans x∼y y∼z)
-
-_≈⟨_⟩_ : ∀ x {y z} → x ≈ y → y IsRelatedTo z → x IsRelatedTo z
-_ ≈⟨ x≈y ⟩ relTo y∼z = relTo (trans (reflexive x≈y) y∼z)
-
-_≡⟨_⟩_ : ∀ x {y z} → x ≡ y → y IsRelatedTo z → x IsRelatedTo z
-_ ≡⟨ P.refl ⟩ relTo y∼z = relTo y∼z
-
-_≡⟨⟩_ : ∀ x {y} → x IsRelatedTo y → x IsRelatedTo y
-_ ≡⟨⟩ x∼y = x∼y
-
-_∎ : ∀ x → x IsRelatedTo x
-_∎ _ = relTo refl
-
 ------------------------------------------------------------------------
--- Deprecated
+-- Re-export the contents of the base reasoning module publically
 
-_≈⟨⟩_ = _≡⟨⟩_
+open Base (λ {x} → Eq.refl {x}) Eq.sym reflexive trans public

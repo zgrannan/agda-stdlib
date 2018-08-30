@@ -27,7 +27,7 @@ open import Relation.Binary.Core
 
 open Setoid
 
-module Relation.Binary.Reasoning.Setoid where
+module Relation.Binary.Reasoning.MultiEquational where
 
 infix 1 begin⟨_⟩_
 infixr 2 _≈⟨_⟩_ _≡⟨_⟩_

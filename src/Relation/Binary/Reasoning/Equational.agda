@@ -2,21 +2,21 @@
 -- The Agda standard library
 --
 -- Convenient syntax for equational reasoning
-------------------------------------------------------------------------
-
--- Example use:
-
--- n*0≡0 : ∀ n → n * 0 ≡ 0
--- n*0≡0 zero    = refl
--- n*0≡0 (suc n) = begin
---   suc n * 0  ≡⟨⟩
---   n * 0 + 0  ≈⟨ +-identityʳ (n * 0) ⟩
---   n * 0      ≈⟨ n*0≡0 n ⟩
---   0          ∎
-
+--
 -- Module ≡-Reasoning in Relation.Binary.PropositionalEquality
 -- is recommended for equational reasoning when the underlying equality is
--- Relation.Binary.PropositionalEquality._≡_.
+-- Relation.Binary.PropositionalEquality._≡._
+------------------------------------------------------------------------
+--
+-- Example use:
+--
+-- eq : ∀ x y z → y • x ≈ z • x → x • y ≈ x • z
+-- eq x y z y•x≈z•x = begin
+--   x • y  ≈⟨ comm x y ⟩
+--   y • x  ≈⟨ y•x≈z•x ⟩
+--   z • x  ≈⟨ comm z x ⟩
+--   x • z  ∎
+--   where open import Relation.Binary.Reasoning.Equational setoid
 
 open import Relation.Binary
 
