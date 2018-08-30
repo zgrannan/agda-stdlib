@@ -32,6 +32,6 @@ import Relation.Binary.Reasoning.Core.Single as Base
 open Preorder P
 
 ------------------------------------------------------------------------
--- Re-export the contents of the base reasoning module publically
+-- Re-export the contents of the base reasoning module publicly
 
 open Base (λ {x} → Eq.refl {x}) Eq.sym reflexive trans public

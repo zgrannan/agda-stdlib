@@ -4,30 +4,56 @@
 -- Convenient syntax for "equational reasoning" using a strict partial
 -- order.
 ------------------------------------------------------------------------
+--
+-- Example: proving a non strict inequality
+--
+-- u≤c : u ≤ c
+-- u≤c = begin
+--   u  ≈⟨ u≈v ⟩
+--   v  ≡⟨ v≡w ⟩
+--   w  <⟨ w<x ⟩
+--   x  ≤⟨ x≤y ⟩
+--   y  <⟨ y<z ⟩
+--   z  ≡⟨ z≡b ⟩
+--   b  ≈⟨ b≈c ⟩
+--   c  ∎
+--
+-- Example: proving a strict inequality
+--
+-- u<c : u < c
+-- u<c = begin-<
+--   u  ≈⟨ u≈v ⟩
+--   v  ≡⟨ v≡w ⟩
+--   w  <⟨ w<x ⟩
+--   x  ≤⟨ x≤y ⟩
+--   y  <⟨ y<z ⟩
+--   z  ≡⟨ z≡b ⟩
+--   b  ≈⟨ b≈c ⟩
+--   c  ∎
 
 open import Relation.Binary
 
 module Relation.Binary.Reasoning.StrictPartialOrder
          {p₁ p₂ p₃} (S : StrictPartialOrder p₁ p₂ p₃) where
 
-import Relation.Binary.Reasoning.Core.Double as Base
-import Relation.Binary.StrictToNonStrict as SPO
--- open import Data.Sum
-open import Data.Product using (proj₂)
-
 open StrictPartialOrder S
 
+import Relation.Binary.Reasoning.Core.Double as Base
+import Relation.Binary.StrictToNonStrict _≈_ _<_ as SPO
+open import Data.Sum using (inj₁)
+open import Data.Product using (proj₂)
+
 ------------------------------------------------------------------------
--- Re-export the contents of the base reasoning module publically
+-- Re-export the contents of the base reasoning module publicly
 
 open Base {A = Carrier}
   Eq.sym
-  (SPO.trans _ _ isEquivalence <-resp-≈ trans)
-  (proj₂ (SPO.≤-resp-≈ _ _ isEquivalence <-resp-≈))
-  {!!}
+  (SPO.reflexive Eq.refl)
+  inj₁
+  (SPO.trans isEquivalence <-resp-≈ trans)
   trans
-  (proj₂ <-resp-≈)
-  {!!}
-  {!!}
-  {!!}
+  (λ {x} → SPO.≤-respˡ-≈ Eq.sym Eq.trans <-respˡ-≈ {x})
+  <-respˡ-≈
+  (SPO.<-≤-trans trans <-respʳ-≈)
+  (SPO.≤-<-trans Eq.sym trans <-respˡ-≈)
   public

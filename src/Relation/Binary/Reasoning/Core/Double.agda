@@ -13,17 +13,17 @@ open import Relation.Binary hiding (Decidable)
 
 module Relation.Binary.Reasoning.Core.Double
   {a ℓ₁ ℓ₂ ℓ₃} {A : Set a}
-  {_≈_ : Rel A ℓ₁} (≈-sym   : Symmetric _≈_)
-  {_≤_ : Rel A ℓ₂} (≤-trans : Transitive _≤_) (≤-respˡ-≈ : _≤_ Respectsˡ _≈_) (≤-refl  : Reflexive _≤_)
-  {_<_ : Rel A ℓ₃} (<-trans : Transitive _<_) (<-respˡ-≈ : _<_ Respectsˡ _≈_) (<⇒≤ : _<_ ⇒ _≤_)
-  (<-≤-trans : ∀ {x y z} → x < y → y ≤ z → x < z)
-  (≤-<-trans : ∀ {x y z} → x ≤ y → y < z → x < z)
+  {_≈_ : Rel A ℓ₁} {_≤_ : Rel A ℓ₂} {_<_ : Rel A ℓ₃}
+  (≈-sym : Symmetric _≈_) (≤-refl  : Reflexive _≤_) (<⇒≤ : _<_ ⇒ _≤_)
+  (≤-trans : Transitive _≤_) (<-trans : Transitive _<_)
+  (≤-respˡ-≈ : _≤_ Respectsˡ _≈_) (<-respˡ-≈ : _<_ Respectsˡ _≈_)
+  (<-≤-trans : Trans _<_ _≤_ _<_) (≤-<-trans : Trans _≤_ _<_ _<_)
   where
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 open import Relation.Nullary using (¬_; Dec; yes; no)
 open import Relation.Nullary.Negation using (contradiction)
-open import Relation.Nullary.Decidable using (True; False; toWitness; toWitnessFalse)
+open import Relation.Nullary.Decidable using (True; False; toWitness)
 open import Function using (case_of_)
 open import Level using (_⊔_)
 
