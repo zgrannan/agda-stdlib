@@ -13,7 +13,7 @@ open import Relation.Binary hiding (Decidable)
 
 module Relation.Binary.Reasoning.Core.Double
   {a ℓ₁ ℓ₂ ℓ₃} {A : Set a}
-  {_≈_ : Rel A ℓ₁} {_≤_ : Rel A ℓ₂} {_<_ : Rel A ℓ₃}
+  (_≈_ : Rel A ℓ₁) (_≤_ : Rel A ℓ₂) (_<_ : Rel A ℓ₃)
   (≈-sym : Symmetric _≈_) (≤-refl  : Reflexive _≤_) (<⇒≤ : _<_ ⇒ _≤_)
   (≤-trans : Transitive _≤_) (<-trans : Transitive _<_)
   (≤-respˡ-≈ : _≤_ Respectsˡ _≈_) (<-respˡ-≈ : _<_ Respectsˡ _≈_)
@@ -54,14 +54,14 @@ extractStrict (isStrict x<y) = x<y
 
 infix  3 _∎
 infixr 2 _<⟨_⟩_ _≤⟨_⟩_ _≈⟨_⟩_ _≡⟨_⟩_ _≡⟨⟩_
-infix  1 begin-<_ begin_
+infix  1 begin_ begin-strict_
 
 begin_ : ∀ {x y : A} (x≲y : x ≲ y) → x ≤ y
 begin strict    x<y = <⇒≤ x<y
 begin nonstrict x≤y = x≤y
 
-begin-<_ : ∀ {x y : A} (x≲y : x ≲ y) {eq : True (IsStrict? x≲y)}  → x < y
-(begin-< p) {eq} = extractStrict (toWitness eq)
+begin-strict_ : ∀ {x y : A} (x≲y : x ≲ y) {eq : True (IsStrict? x≲y)} → x < y
+(begin-strict p) {eq} = extractStrict (toWitness eq)
 
 _<⟨_⟩_ : ∀ (x : A) {y z} → x < y → y ≲ z → x ≲ z
 x <⟨ x<y ⟩ strict    y<z = strict (<-trans x<y y<z)

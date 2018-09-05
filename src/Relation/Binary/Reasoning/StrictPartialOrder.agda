@@ -1,8 +1,9 @@
 ------------------------------------------------------------------------
 -- The Agda standard library
 --
--- Convenient syntax for "equational reasoning" using a strict partial
--- order.
+-- Convenient syntax for "inequality reasoning" using a strict partial
+-- order. The corresponding non-strict relation is generated using
+-- `Relation.Binary.StrictToNonStrict`.
 ------------------------------------------------------------------------
 --
 -- Example: proving a non strict inequality
@@ -21,7 +22,7 @@
 -- Example: proving a strict inequality
 --
 -- u<c : u < c
--- u<c = begin-<
+-- u<c = begin-strict
 --   u  ≈⟨ u≈v ⟩
 --   v  ≡⟨ v≡w ⟩
 --   w  <⟨ w<x ⟩
@@ -46,10 +47,10 @@ open import Data.Product using (proj₂)
 ------------------------------------------------------------------------
 -- Re-export the contents of the base reasoning module publicly
 
-open Base {A = Carrier}
+open Base _≈_ SPO._≤_ _<_
   Eq.sym
   (SPO.reflexive Eq.refl)
-  inj₁
+  (SPO.<⇒≤)
   (SPO.trans isEquivalence <-resp-≈ trans)
   trans
   (λ {x} → SPO.≤-respˡ-≈ Eq.sym Eq.trans <-respˡ-≈ {x})

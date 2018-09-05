@@ -1,8 +1,36 @@
 ------------------------------------------------------------------------
 -- The Agda standard library
 --
--- Convenient syntax for "equational reasoning" using a partial order
+-- Convenient syntax for "inequality reasoning" using an underlying
+-- partial order. The corresponding strict relation is generated using
+-- `Relation.Binary.NonStrictToStrict`.
 ------------------------------------------------------------------------
+--
+-- Example: proving a non strict inequality
+--
+-- u≤c : u ≤ c
+-- u≤c = begin
+--   u  ≈⟨ u≈v ⟩
+--   v  ≡⟨ v≡w ⟩
+--   w  <⟨ w<x ⟩
+--   x  ≤⟨ x≤y ⟩
+--   y  <⟨ y<z ⟩
+--   z  ≡⟨ z≡b ⟩
+--   b  ≈⟨ b≈c ⟩
+--   c  ∎
+--
+-- Example: proving a strict inequality
+--
+-- u<c : u < c
+-- u<c = begin-strict
+--   u  ≈⟨ u≈v ⟩
+--   v  ≡⟨ v≡w ⟩
+--   w  <⟨ w<x ⟩
+--   x  ≤⟨ x≤y ⟩
+--   y  <⟨ y<z ⟩
+--   z  ≡⟨ z≡b ⟩
+--   b  ≈⟨ b≈c ⟩
+--   c  ∎
 
 open import Relation.Binary
 
@@ -17,10 +45,10 @@ import Relation.Binary.NonStrictToStrict _≈_ _≤_ as NSPO
 ------------------------------------------------------------------------
 -- Re-export the contents of the base reasoning module publicly
 
-open Base {A = Carrier} {_≈_} {_≤_} {NSPO._<_}
+open Base _≈_ _≤_ NSPO._<_
   Eq.sym
   refl
-  {!!}
+  (NSPO.<⇒≤)
   trans
   (NSPO.<-trans isPartialOrder)
   ≤-respˡ-≈
@@ -28,8 +56,3 @@ open Base {A = Carrier} {_≈_} {_≤_} {NSPO._<_}
   (NSPO.<-≤-trans Eq.sym trans antisym ≤-respʳ-≈)
   (NSPO.≤-<-trans trans antisym ≤-respˡ-≈)
   public
-
-{-
-import Relation.Binary.Reasoning.Preorder as PreR
-open PreR preorder public renaming (_∼⟨_⟩_ to _≤⟨_⟩_)
--}
