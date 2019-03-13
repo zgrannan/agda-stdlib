@@ -6,8 +6,12 @@ open import Level
 open import Relation.Binary.Core
 open import Relation.Binary.Construct.Closure.ReflexiveTransitive
 
-Deterministic : ∀ {A B : Set} → {ℓ : Level} → REL A B ℓ → Set _
-Deterministic _—→_ = ∀ {A B C} → A —→ B → A —→ C → B ≡ C
+
+Det : ∀ {a b ℓ₁ ℓ₂} → {A : Set a} → {B : Set b} → Rel B ℓ₁ → REL A B ℓ₂ → Set _
+Det _≈_ _—→_ = ∀ {x y z} → x —→ y → x —→ z → y ≈ z
+
+Deterministic : ∀ {a b ℓ} → {A : Set a} → {B : Set b} → REL A B ℓ → Set _
+Deterministic = Det _≡_
 
 Confluent : ∀ {A : Set} → {ℓ : Level} → (r :  Rel A ℓ) → Set _
 Confluent _—→_ = ∀ {A B C} → (A —↠ B × A —↠ C) → ∃ λ D → (B —↠ D) × (C —↠ D)
