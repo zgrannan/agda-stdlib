@@ -69,11 +69,6 @@ _+_ Preserves₂ P ⟶ Q ⟶ R =
 Reflexive : ∀ {a ℓ} {A : Set a} → Rel A ℓ → Set _
 Reflexive _∼_ = ∀ {x} → x ∼ x
 
-Deterministic : ∀ {A B : Set} → {ℓ : Level} → REL A B ℓ → Set _
-Deterministic _—→_ = ∀ {A B C} → A —→ B → A —→ C → B ≡ C
-
-Confluent : ∀ {A : Set} → {ℓ : Level} → Rel A ℓ → Set _
-Confluent {a} _—→_ = ∀ {A B C} → (A —→ B × A —→ C) → ∃ λ D → (C —→ D) × (B —→ D)
 
 
 -- Confluent : ∀ {A B : Set} → {ℓ : Level} → REL A B ℓ → Set _
@@ -108,6 +103,7 @@ TransFlip P Q R = ∀ {i j k} → Q j k → P i j → R i k
 
 Transitive : ∀ {a ℓ} {A : Set a} → Rel A ℓ → Set _
 Transitive _∼_ = Trans _∼_ _∼_ _∼_
+
 
 -- Generalised antisymmetry
 
