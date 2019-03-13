@@ -14,7 +14,7 @@ module Relation.Binary.Core where
 open import Agda.Builtin.Equality using (_≡_) renaming (refl to ≡-refl)
 
 open import Data.Maybe.Base using (Maybe)
-open import Data.Product using (_×_)
+open import Data.Product using (_×_; ∃)
 open import Data.Sum.Base using (_⊎_)
 open import Function using (_on_; flip)
 open import Level
@@ -68,6 +68,16 @@ _+_ Preserves₂ P ⟶ Q ⟶ R =
 
 Reflexive : ∀ {a ℓ} {A : Set a} → Rel A ℓ → Set _
 Reflexive _∼_ = ∀ {x} → x ∼ x
+
+Deterministic : ∀ {A B : Set} → {ℓ : Level} → REL A B ℓ → Set _
+Deterministic _—→_ = ∀ {A B C} → A —→ B → A —→ C → B ≡ C
+
+Confluent : ∀ {A : Set} → {ℓ : Level} → Rel A ℓ → Set _
+Confluent {a} _—→_ = ∀ {A B C} → (A —→ B × A —→ C) → ∃ λ D → (C —→ D) × (B —→ D)
+
+
+-- Confluent : ∀ {A B : Set} → {ℓ : Level} → REL A B ℓ → Set _
+-- Confluent {a} {b} _—→_ = ∀ {A B C D} → ∃ {D} ( (A —→ B × A —→ C) → (C —→ D) × (B —→ D) )
 
 -- Irreflexivity is defined using an underlying equality.
 
