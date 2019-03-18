@@ -10,8 +10,10 @@
 module Relation.Binary.Rewriting where
 
 open import Agda.Builtin.Equality using (_≡_ ; refl)
+open import Codata.Thunk
 open import Data.Product using (_×_ ; ∃ ; _,_ ; proj₂)
 open import Data.Empty
+open import Data.Nat.Base 
 open import Data.Sum as Sum using (_⊎_)
 open import Level
 open import Relation.Binary.Core
@@ -19,6 +21,7 @@ open import Relation.Binary.Construct.Closure.Transitive
 open import Relation.Binary.Construct.Closure.ReflexiveTransitive
 open import Relation.Binary.Construct.Closure.Symmetric
 open import Relation.Nullary
+open import Size
 
 -- The following definitions are taken from Klop [5]
 IsNormalForm : ∀ {A : Set} → {ℓ : Level} → {r : Rel A ℓ} → (a : A) → Set _
@@ -61,10 +64,33 @@ Confluent _—→_ = ∀ {A B C} → (A —↠ B × A —↠ C) → ∃ λ D →
   where
      _—↠_ = Star _—→_
 
-Diamond : ∀ {A : Set} → {ℓ : Level} → (r :  Rel A ℓ) → Set _
+Diamond : ∀ {A : Set} → {ℓ : Level} → (r : Rel A ℓ) → Set _
 Diamond _—→_ = ∀ {A B C} → (A —→ B × A —→ C) → ∃ λ D → (B —↠ D) × (C —↠ D)
   where
     _—↠_ = Star _—→_
+
+-- data CoHlist {ℓ} (i : Size) : Colist (Set ℓ)  → Set (Level.suc ℓ) where
+--   []  : Colist A i
+--   _∷_ : A → Thunk (Colist A) i → Colist A i
+
+-- The type of _◅_ is Trans T (Star T) (Star T); The
+-- definition is expanded in order to be able to name
+-- the arguments (x and xs).
+
+module _ {A : Set} {ℓ : Level} {_⟶_ : Rel A ℓ} where
+
+  data _∈_ {a₀ aₙ : A} : (a : A) → (seq : (Star _⟶_) a₀ aₙ) → Set where
+    here : ∀ seq → a₀ ∈ seq
+    there : ∀ a a₁ → (first : a₀ ⟶ a₁) → (rest : (Star _⟶_) a₁ aₙ) → a ∈ seq → a ∈ first ◅ rest
+
+-- Inductive : ∀ {A : Set} → {ℓ : Level} → (r : Rel A ℓ) → Set ?
+-- Inductive _—→_ = ∀ {a₀ aₙ} → (seq : a₀ —↠ aₙ) → ∃ λ a → ∀ b → (b  ∈ seq) → b —↠ a
+--   where
+--     _—↠_ = Star _—→_
+
+
+Increasing : ∀ {A : Set} → {ℓ : Level} → (r : Rel A ℓ) → Set _
+Increasing {A} _⟶_ = ∃ λ (f : A → ℕ) → (∀ a b → (a ⟶ b) → f a < f b)
 
 det⟶conf : ∀ {A : Set}
   → {ℓ : Level}
